@@ -1,1 +1,1 @@
-# dans-diet-api
+Back end for https://github.com/DavidLozzi/dans-diet-web
