@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = (app, router) => {
   var user = require('../controllers/userController'),
     authMiddleware = require('../middlewares/auth.validation.middleware'),

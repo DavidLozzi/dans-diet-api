@@ -19,7 +19,7 @@ exports.auth = (req, res) => {
         var hashPwd = crypto.createHmac('sha512', salt).update(req.body.password).digest('base64');
 
         if(savedPwd === hashPwd){
-          var token = jwt.sign({ id: user._id, perms: user[0].permissions }, config.secret, { expiresIn: 86400 });
+          var token = jwt.sign({ uid: user[0]._id, email: user[0].email, perms: user[0].permissions }, config.secret, { expiresIn: 86400 });
           res.status(200).send({auth: true, token: token });
           console.log(`AUTH: successful for ${req.body.email}`)
         } else {

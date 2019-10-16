@@ -1,0 +1,95 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "jest": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js"
+        ]
+      }
+    ],
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/anchor-is-valid": [
+      2,
+      {
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "to"
+        ]
+      }
+    ],
+    "jsx-a11y/interactive-supports-focus": 0,
+    "jsx-a11y/no-noninteractive-element-interactions": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
+    "import/prefer-default-export": 0,
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true,
+        "optionalDependencies": true,
+        "peerDependencies": false
+      }
+    ],
+    "no-case-declarations": 0,
+    "linebreak-style": 0,
+    "function-paren-newline": 0,
+    "func-names": [
+      1,
+      "as-needed"
+    ],
+    "comma-dangle": 0,
+    "max-len": 0,
+    "eol-last": 0,
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": "always",
+        "ObjectPattern": {
+          "multiline": false,
+          "minProperties": 3
+        },
+        "ImportDeclaration": "never",
+        "ExportDeclaration": {
+          "multiline": true,
+          "minProperties": 3
+        }
+      }
+    ],
+    "operator-linebreak": [
+      "error",
+      "after"
+    ]
+  },
+  "globals": {
+    "_satellite": true
+  },
+  "overrides": [
+    // Containers are not consumable components. Redux attaches many props from the store via mapStateToProps in
+    // the connect() method. Since these props do not need to be explicitly added, they should not be validated
+    // (programmer has no control over them and doesn't always know their shape). Avoids linters having a fit.
+    // https://github.com/yannickcr/eslint-plugin-react/issues/553
+    {
+      "files": [
+        "src/containers/**/*.js"
+      ]
+    }
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": [
+          "src"
+        ] // Must match NODE_PATH
+      }
+    }
+  },
+  "parser": "babel-eslint"
+}

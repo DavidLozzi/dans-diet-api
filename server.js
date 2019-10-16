@@ -2,11 +2,14 @@ var
   express = require('express'),
   cors = require('cors'),
   mongoose = require('mongoose'),
-  User = require('./models/usermodel'),
   bodyParser = require('body-parser'),
   app = express(),
   router = express.Router(),
   port = process.env.PORT || 3001;
+
+var // models
+  User = require('./models/usermodel'),
+  Diet = require('./models/dietModel');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/DansDietDB');
@@ -24,7 +27,8 @@ signupRoutes(app, router);
 var authRoutes = require('./routes/authRoutes');
 authRoutes(app);
 
-
+var dietRoutes = require('./routes/dietRoutes');
+dietRoutes(app, router);
 
 app.use((req, res) => {
   res.status(404).send({url: req.originalUrl + ' not found'});

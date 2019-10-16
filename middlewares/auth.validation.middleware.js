@@ -29,3 +29,24 @@ exports.minimumPermissionLevelRequired = (required_permission_level) => {
     }
   };
 };
+
+exports.requestingUser = async (headers) => {
+  if (headers['authorization']) {
+    try {
+      let authorization = headers['authorization'].split(' ');
+      if (authorization[0] !== 'Bearer') {
+        throw new Error('401');
+      } else {
+        let user;
+        await jwt.verify(authorization[1], config.secret, (err, decoded) => {
+          user = decoded;
+        });
+        return user;
+      }
+    } catch (err) {
+      throw new Error('403');
+    }
+  } else {
+    throw new Error('401');
+  }
+}
