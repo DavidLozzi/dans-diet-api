@@ -31,6 +31,33 @@ exports.create = async (req, res) => {
   })
 };
 
+exports.update = async (req, res) => {
+  console.log('updating diet');
+
+  const userFromReq = await authMiddleware.requestingUser(req.headers);
+  const userDiet = { ...req.body, userId: userFromReq.uid };
+  console.log(userDiet);
+  Diet.findOneAndUpdate({_id: req.params.dietId, userId: userFromReq.uid}, userDiet,
+    (err, diet) => {
+      if (err)
+        res.send(err);
+
+      this.list(req, res);
+    });
+};
+
+exports.delete = async (req, res) => {
+  console.log('deleting diet');
+
+  const userFromReq = await authMiddleware.requestingUser(req.headers);
+  Diet.remove({ _id: req.params.dietId, userId: userFromReq.uid },
+    (err) => {
+      if (err)
+        res.send(err);
+      
+        this.list(req, res);
+    });
+};
 
 // exports.read = (req, res) => {
 //   User.findById(req.params.userId, (err, user) => {

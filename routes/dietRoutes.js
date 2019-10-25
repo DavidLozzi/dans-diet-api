@@ -9,13 +9,8 @@ module.exports = (app, router) => {
 
   router.get(path, diet.list);
   router.post(path, diet.create);
-
-  // router.get(pathWithId, user.read);
-  // router.put(pathWithId, user.update);
-  // router.delete(pathWithId,
-  //   authMiddleware.minimumPermissionLevelRequired(perms.ADMIN),
-  //   user.delete
-  // );
+  router.put(pathWithId, diet.update);
+  router.delete(pathWithId, diet.delete);
 
   app.use('/', router);
 };

@@ -3,3 +3,5 @@ var cert = fs.readFileSync('public.pem');  // get public key
 jwt.verify(token, cert, function(err, decoded) {
   console.log(decoded.foo) // bar
 });
+
+fix warnings in console
