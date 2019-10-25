@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
     if (err)
       res.send(err);
 
-    res.json(diet);
+    this.list(req, res);
   })
 };
 
