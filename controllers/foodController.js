@@ -1,62 +1,38 @@
 var mongoose = require('mongoose'),
   pick = require('lodash.pick'),
-  Diet = mongoose.model('Diets'),
   Food = mongoose.model('Foods'),
   utils = require('../common/utils'),
-  foodUtils = require('../common/foodUtils'),
   authMiddleware = require('../middlewares/auth.validation.middleware');
 
 
 exports.list = async (req, res) => {
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  Diet.find({ userId: userFromReq.uid }, (err, diet) => {
+  Food.find({userId: userFromReq.uid}, (err, food) => {
     if (err)
       res.send(err);
 
-    res.json(diet);
+    res.json(food);
   });
 };
 
 exports.one = async (req, res) => {
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  // Diet.findOne({ userId: userFromReq.uid, _id: req.params.dietId }, async (err, diet) => {
-  //   if (err)
-  //     res.send(err);
+  Food.find({userId: userFromReq.uid, _id: req.params.foodId}, (err, food) => {
+    if (err)
+      res.send(err);
 
-  //   const food = await foodUtils.getFoodForDiet(userFromReq.uid, diet._id);
-  //   console.log(food);
-  //   // diet.food = food;
-  //   res.json(Object.assign(diet, { food }));
-  // });
-  Diet.aggregate([
-    // {
-    //   $match: {
-    //     userId: userFromReq.uid,
-    //     _id: req.params.dietId
-    //   }
-    // },
-    {
-      $lookup: {
-        from: 'Food',
-        localField: '_id',
-        foreignField: 'dietId',
-        as: 'foods'
-      }
-    }])
-    .then((diet) => {
-      console.log(diet);
-      res.json(diet);
-    });
+    res.json(food[0]);
+  });
 };
 
 exports.create = async (req, res) => {
-  console.log('creating diet');
+  console.log('creating food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  const userDiet = { ...req.body, userId: userFromReq.uid };
-  console.log(userDiet);
-  var newDiet = new Diet(userDiet);
-  newDiet.save((err, diet) => {
+  const userFood = { ...req.body, userId: userFromReq.uid };
+  console.log(userFood);
+  var newFood = new Food(userFood);
+  newFood.save((err, food) => {
     if (err)
       res.send(err);
 
@@ -65,13 +41,13 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  console.log('updating diet');
+  console.log('updating food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  const userDiet = { ...req.body, userId: userFromReq.uid };
-  console.log(userDiet);
-  Diet.findOneAndUpdate({ _id: req.params.dietId, userId: userFromReq.uid }, userDiet,
-    (err, diet) => {
+  const userFood = { ...req.body, userId: userFromReq.uid };
+  console.log(userFood);
+  Food.findOneAndUpdate({_id: req.params.foodId, userId: userFromReq.uid}, userFood,
+    (err, food) => {
       if (err)
         res.send(err);
 
@@ -80,15 +56,15 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  console.log('deleting diet');
+  console.log('deleting food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  Diet.remove({ _id: req.params.dietId, userId: userFromReq.uid },
+  Food.remove({ _id: req.params.foodId, userId: userFromReq.uid },
     (err) => {
       if (err)
         res.send(err);
-
-      this.list(req, res);
+      
+        this.list(req, res);
     });
 };
 
