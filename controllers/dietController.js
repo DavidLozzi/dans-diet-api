@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
   pick = require('lodash.pick'),
   Diet = mongoose.model('Diets'),
+  ObjectId = mongoose.Types.ObjectId,
   Food = mongoose.model('Foods'),
   utils = require('../common/utils'),
   foodUtils = require('../common/foodUtils'),
@@ -29,23 +30,24 @@ exports.one = async (req, res) => {
   //   res.json(Object.assign(diet, { food }));
   // });
   Diet.aggregate([
-    // {
-    //   $match: {
-    //     userId: userFromReq.uid,
-    //     _id: req.params.dietId
-    //   }
-    // },
+    {
+      $match: {
+        userId: userFromReq.uid,
+        _id: ObjectId(req.params.dietId)
+      }
+    },
     {
       $lookup: {
-        from: 'Food',
+        from: 'foods',
         localField: '_id',
         foreignField: 'dietId',
         as: 'foods'
       }
-    }])
+    }
+  ])
     .then((diet) => {
       console.log(diet);
-      res.json(diet);
+      res.json(diet.length > 0 ? diet[0] : []);
     });
 };
 

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
   pick = require('lodash.pick'),
   Food = mongoose.model('Foods'),
+  ObjectId = mongoose.Types.ObjectId,
   utils = require('../common/utils'),
   authMiddleware = require('../middlewares/auth.validation.middleware');
 
@@ -29,7 +30,7 @@ exports.create = async (req, res) => {
   console.log('creating food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  const userFood = { ...req.body, userId: userFromReq.uid };
+  const userFood = { ...req.body, userId: ObjectId(userFromReq.uid), dietId: ObjectId(req.body.dietId) };
   console.log(userFood);
   var newFood = new Food(userFood);
   newFood.save((err, food) => {
