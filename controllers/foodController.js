@@ -1,54 +1,39 @@
 var mongoose = require('mongoose'),
   pick = require('lodash.pick'),
-  Diet = mongoose.model('Diets'),
-  ObjectId = mongoose.Types.ObjectId,
   Food = mongoose.model('Foods'),
+  ObjectId = mongoose.Types.ObjectId,
   utils = require('../common/utils'),
-  foodUtils = require('../common/foodUtils'),
   authMiddleware = require('../middlewares/auth.validation.middleware');
 
 
 exports.list = async (req, res) => {
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  Diet.find({ userId: ObjectId(userFromReq.uid) }, (err, diet) => {
+  Food.find({userId: userFromReq.uid}, (err, food) => {
     if (err)
       res.send(err);
 
-    res.json(diet);
+    res.json(food);
   });
 };
 
 exports.one = async (req, res) => {
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  Diet.aggregate([
-    {
-      $match: {
-        userId: ObjectId(userFromReq.uid),
-        _id: ObjectId(req.params.dietId)
-      }
-    },
-    {
-      $lookup: {
-        from: 'foods',
-        localField: '_id',
-        foreignField: 'dietId',
-        as: 'foods'
-      }
-    }
-  ])
-    .then((diet) => {
-      res.json(diet.length > 0 ? diet[0] : []);
-    });
+  Food.find({userId: userFromReq.uid, _id: req.params.foodId}, (err, food) => {
+    if (err)
+      res.send(err);
+
+    res.json(food[0]);
+  });
 };
 
 exports.create = async (req, res) => {
-  console.log('creating diet');
+  console.log('creating food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid) };
-  console.log(userDiet);
-  var newDiet = new Diet(userDiet);
-  newDiet.save((err, diet) => {
+  const userFood = { ...req.body, userId: ObjectId(userFromReq.uid), dietId: ObjectId(req.body.dietId) };
+  console.log(userFood);
+  var newFood = new Food(userFood);
+  newFood.save((err, food) => {
     if (err)
       res.send(err);
 
@@ -57,13 +42,13 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  console.log('updating diet');
+  console.log('updating food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid) };
-  console.log(userDiet);
-  Diet.findOneAndUpdate({ _id: req.params.dietId, userId: userFromReq.uid }, userDiet,
-    (err, diet) => {
+  const userFood = { ...req.body, userId: userFromReq.uid };
+  console.log(userFood);
+  Food.findOneAndUpdate({_id: req.params.foodId, userId: userFromReq.uid}, userFood,
+    (err, food) => {
       if (err)
         res.send(err);
 
@@ -72,15 +57,15 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  console.log('deleting diet');
+  console.log('deleting food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  Diet.remove({ _id: req.params.dietId, userId: ObjectId(userFromReq.uid) },
+  Food.remove({ _id: req.params.foodId, userId: userFromReq.uid },
     (err) => {
       if (err)
         res.send(err);
-
-      this.list(req, res);
+      
+        this.list(req, res);
     });
 };
 

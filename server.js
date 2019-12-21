@@ -9,7 +9,8 @@ var
 
 var // models
   User = require('./models/usermodel'),
-  Diet = require('./models/dietModel');
+  Diet = require('./models/dietModel'),
+  Food = require('./models/foodModel');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/DansDietDB');
@@ -29,6 +30,9 @@ authRoutes(app);
 
 var dietRoutes = require('./routes/dietRoutes');
 dietRoutes(app, router);
+
+var foodRoutes = require('./routes/foodRoutes');
+foodRoutes(app, router);
 
 app.use((req, res) => {
   res.status(404).send({url: req.originalUrl + ' not found'});
