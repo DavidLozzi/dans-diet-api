@@ -37,7 +37,7 @@ exports.one = async (req, res) => {
     }
   ])
     .then((diet) => {
-      res.json(diet.length > 0 ? diet[0] : []);
+      res.json(diet.length > 0 ? diet[0] : {});
     });
 };
 
@@ -60,32 +60,37 @@ exports.share = async (req, res) => {
   console.log('sharing diet');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  let shareId = await utils.getUniqueShareId();
-  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid), shareId };
+  const shareId = await utils.getUniqueShareId();
+  const isShared = true;
+  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid), shareId, isShared };
   console.log(userDiet);
   Diet.findOneAndUpdate({ _id: req.params.dietId, userId: userFromReq.uid }, userDiet,
     (err, diet) => {
       if (err)
         res.send(err);
 
-      this.list(req, res);
-    });
+    })
+  .then((diet) => {
+    this.one(req, res);
+  });
 };
 
 exports.unshare = async (req, res) => {
-  console.log('sharing diet');
+  console.log('unsharing diet');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  let shareId = undefined;
-  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid), shareId };
+  const shareId = undefined;
+  const isShared = false;
+  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid), shareId, isShared };
   console.log(userDiet);
   Diet.findOneAndUpdate({ _id: req.params.dietId, userId: userFromReq.uid }, userDiet,
     (err, diet) => {
       if (err)
         res.send(err);
-
-      this.list(req, res);
-    });
+    })
+  .then((diet) => {
+    this.one(req, res);
+  });
 };
 
 exports.update = async (req, res) => {

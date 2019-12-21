@@ -5,6 +5,7 @@ var DietSchema = new Schema({
   title: String,
   description: String,
   shareId: String,
+  isShared: Boolean,
   userId: mongoose.Schema.Types.ObjectId,
   created: {
     type: Date,
