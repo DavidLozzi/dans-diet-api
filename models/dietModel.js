@@ -5,7 +5,7 @@ var DietSchema = new Schema({
   title: String,
   description: String,
   shareId: String,
-  userId: String,
+  userId: mongoose.Schema.Types.ObjectId,
   created: {
     type: Date,
     default: Date.now

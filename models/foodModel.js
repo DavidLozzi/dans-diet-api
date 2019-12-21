@@ -2,8 +2,8 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var FoodSchema = new Schema({
-  userId: String,
-  dietId: String,
+  userId: mongoose.Schema.Types.ObjectId,
+  dietId: mongoose.Schema.Types.ObjectId,
   name: String,
   category: String,
   notes: String,
