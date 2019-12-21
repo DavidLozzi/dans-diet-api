@@ -56,6 +56,38 @@ exports.create = async (req, res) => {
   })
 };
 
+exports.share = async (req, res) => {
+  console.log('sharing diet');
+
+  const userFromReq = await authMiddleware.requestingUser(req.headers);
+  let shareId = await utils.getUniqueShareId();
+  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid), shareId };
+  console.log(userDiet);
+  Diet.findOneAndUpdate({ _id: req.params.dietId, userId: userFromReq.uid }, userDiet,
+    (err, diet) => {
+      if (err)
+        res.send(err);
+
+      this.list(req, res);
+    });
+};
+
+exports.unshare = async (req, res) => {
+  console.log('sharing diet');
+
+  const userFromReq = await authMiddleware.requestingUser(req.headers);
+  let shareId = undefined;
+  const userDiet = { ...req.body, userId: ObjectId(userFromReq.uid), shareId };
+  console.log(userDiet);
+  Diet.findOneAndUpdate({ _id: req.params.dietId, userId: userFromReq.uid }, userDiet,
+    (err, diet) => {
+      if (err)
+        res.send(err);
+
+      this.list(req, res);
+    });
+};
+
 exports.update = async (req, res) => {
   console.log('updating diet');
 
