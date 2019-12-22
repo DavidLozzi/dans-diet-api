@@ -41,6 +41,60 @@ exports.one = async (req, res) => {
     });
 };
 
+exports.viewShared = (req, res) => {
+  const shareId = req.params.shareId;
+  console.log(`viewing shared diet ${shareId}`);
+
+  Diet.aggregate([
+    {
+      $match: {
+        shareId,
+      }
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user'
+      }
+    },
+    {
+      $addFields: {
+        user: {
+          $map: {
+            input:'$user',
+            in:{
+              first_name:'$$this.first_name'
+            }
+          }
+        }
+      }
+    },
+    {
+      $unwind: {
+        path: '$user',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: 'foods',
+        localField: '_id',
+        foreignField: 'dietId',
+        as: 'foods'
+      }
+    }
+  ])
+    .then((diet) => {
+      if (diet && diet.length === 1)
+        res.json(diet[0]);
+      else
+        res.status(404).send({ message: `${shareId} not found` });
+    });
+
+};
+
 exports.create = async (req, res) => {
   console.log('creating diet');
 
@@ -70,9 +124,9 @@ exports.share = async (req, res) => {
         res.send(err);
 
     })
-  .then((diet) => {
-    this.one(req, res);
-  });
+    .then((diet) => {
+      this.one(req, res);
+    });
 };
 
 exports.unshare = async (req, res) => {
@@ -88,9 +142,9 @@ exports.unshare = async (req, res) => {
       if (err)
         res.send(err);
     })
-  .then((diet) => {
-    this.one(req, res);
-  });
+    .then((diet) => {
+      this.one(req, res);
+    });
 };
 
 exports.update = async (req, res) => {
