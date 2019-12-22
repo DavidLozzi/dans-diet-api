@@ -34,6 +34,9 @@ dietRoutes(app, router);
 var foodRoutes = require('./routes/foodRoutes');
 foodRoutes(app, router);
 
+var viewRoutes = require('./routes/viewRoutes');
+viewRoutes(app, router);
+
 app.use((req, res) => {
   res.status(404).send({url: req.originalUrl + ' not found'});
 });
