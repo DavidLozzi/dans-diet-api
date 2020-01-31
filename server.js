@@ -37,6 +37,9 @@ foodRoutes(app, router);
 var viewRoutes = require('./routes/viewRoutes');
 viewRoutes(app, router);
 
+var groceriersRoutes = require('./routes/groceriesRoutes');
+groceriersRoutes(app, router);
+
 app.use((req, res) => {
   res.status(404).send({url: req.originalUrl + ' not found'});
 });
@@ -44,4 +47,3 @@ app.use((req, res) => {
 app.listen(port);
 
 console.log('Dans Diet API started on: ' + port);
-
