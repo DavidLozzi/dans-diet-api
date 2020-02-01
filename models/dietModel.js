@@ -6,10 +6,22 @@ var DietSchema = new Schema({
   description: String,
   shareId: String,
   isShared: Boolean,
-  userId: mongoose.Schema.Types.ObjectId,
+  userId: Schema.Types.ObjectId,
   created: {
     type: Date,
     default: Date.now
+  },
+  photo: {
+    id: String,
+    color: String,
+    imageUrl: String,
+    thumbnailUrl: String,
+    sourceUrl: String,
+    user: {
+      id: String,
+      username: String,
+      name: String
+    }
   }
 });
 
