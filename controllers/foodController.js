@@ -60,7 +60,7 @@ exports.delete = async (req, res) => {
   console.log('deleting food');
 
   const userFromReq = await authMiddleware.requestingUser(req.headers);
-  Food.remove({ _id: req.params.foodId, userId: userFromReq.uid },
+  Food.deleteOne({ _id: req.params.foodId, userId: userFromReq.uid },
     (err) => {
       if (err)
         res.send(err);

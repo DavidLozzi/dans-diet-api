@@ -10,6 +10,9 @@ var mongoose = require('mongoose'),
 
 exports.list = async (req, res) => {
   const userFromReq = await authMiddleware.requestingUser(req.headers);
+  
+  // db.diets.aggregate([{$lookup: {from: 'foods', localField: '_id', foreignField: 'dietId', as: 'foods'}},{$project: {_id:'$_id',name:'$name',category:'$category',numOfFood:{$size:'$foods'}}}]).pretty()
+
   Diet.find({ userId: ObjectId(userFromReq.uid) }, (err, diet) => {
     if (err)
       res.send(err);

@@ -1,14 +1,14 @@
 var NodeCache = require('node-cache');
 
-const mins5 = 300;
-const myCache = new NodeCache({ stdTTL: mins5, checkperiod: mins5 + 20 });
+const cacheLife = 600;
+const myCache = new NodeCache({ stdTTL: cacheLife, checkperiod: cacheLife + 20 });
 
-exports.set = async (key, value) => {
-  console.log('setting', key, value);
-  myCache.set(key, value);
+exports.set = async (store, key, value) => {
+  console.log('cache set', store, key, value);
+  myCache.set(`${store}-${key}`, value);
 }
 
-exports.get = async (key) => {
-  console.log('getting', key);
-  return myCache.get(key);
+exports.get = async (store, key) => {
+  console.log('cache get', store, key);
+  return myCache.get(`${store}-${key}`);
 }

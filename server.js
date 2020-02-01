@@ -40,6 +40,9 @@ viewRoutes(app, router);
 var groceriersRoutes = require('./routes/groceriesRoutes');
 groceriersRoutes(app, router);
 
+var photosRoutes = require('./routes/photosRoutes');
+photosRoutes(app, router);
+
 app.use((req, res) => {
   res.status(404).send({url: req.originalUrl + ' not found'});
 });
