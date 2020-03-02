@@ -7,4 +7,6 @@ module.exports = (app, router) => {
   router.post(path, user.create);
 
   app.use('/', router);
+
+  console.log('signup routes set');
 };

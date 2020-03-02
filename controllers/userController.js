@@ -16,6 +16,7 @@ exports.list = (req, res) => {
 
 
 exports.create = (req, res) => {
+  console.log('creating user ', req.body.email);
   req.body.password = utils.hashPassword(req.body.password);
 
   var new_user = new User(req.body);
