@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "setup-tables": "node scripts/setup-tables.js"
   },
   "author": "",
   "license": "ISC",
@@ -24,9 +25,9 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "lodash.pick": "^4.4.0",
-    "mongoose": "^5.7.5",
     "nanoid": "^2.1.8",
     "node-cache": "^5.1.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "uuid": "^8.3.2"
   }
 }

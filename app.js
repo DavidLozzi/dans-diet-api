@@ -1,20 +1,19 @@
 var 
   express = require('express'),
   cors = require('cors'),
-  mongoose = require('mongoose'),
   bodyParser = require('body-parser'),
   app = express(),
   router = express.Router(),
   config = require('./common/config'),
   port = process.env.PORT || 3001;
 
+// Initialize DynamoDB connection
+require('./common/dynamodb');
+
 var // models
   User = require('./models/userModel'),
   Diet = require('./models/dietModel'),
   Food = require('./models/foodModel');
-
-mongoose.Promise = global.Promise;
-mongoose.connect(config.mongoDb, {useNewUrlParser: true}); // 'mongodb://localhost/DansDietDB');
 
 app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,6 +47,6 @@ app.use((req, res) => {
   res.status(404).send({url: req.originalUrl + ' not found'});
 });
 
-console.log('app loaded');
+console.log('app loaded with DynamoDB');
 
 module.exports = app;
